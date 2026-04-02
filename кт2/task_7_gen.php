@@ -1,57 +1,51 @@
-
 <?php
-session_start();
 
-// Создаем изображение
-$width = 200;
-$height = 70;
-$image = imagecreatetruecolor($width, $height);
+ob_start();
 
-// Цвета
-$bg_color = imagecolorallocate($image, 255, 255, 255);
-$text_color = imagecolorallocate($image, 0, 0, 0);
-$line_color = imagecolorallocate($image, 100, 100, 100);
-
-// Заливка фона
-imagefill($image, 0, 0, $bg_color);
-
-// Получаем код из сессии
-$code = $_SESSION['captcha_code'] ?? '12345';
-
-// Добавляем линии для усложнения распознавания
-for ($i = 0; $i < 5; $i++) {
-    $x1 = rand(0, $width);
-    $y1 = rand(0, $height);
-    $x2 = rand(0, $width);
-    $y2 = rand(0, $height);
-    imageline($image, $x1, $y1, $x2, $y2, $line_color);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-// Добавляем текст с искажением
-for ($i = 0; $i < strlen($code); $i++) {
+if (!extension_loaded('gd')) {
+    ob_end_clean();
+    header('Content-Type: image/png');
+    header('Cache-Control: no-store');
+    echo base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+    exit;
+}
+
+$code = $_SESSION['captcha_code'] ?? '';
+if ($code === '') {
+    $code = (string) random_int(10000, 99999);
+    $_SESSION['captcha_code'] = $code;
+}
+
+$w = 200;
+$h = 70;
+$img = imagecreatetruecolor($w, $h);
+$bg = imagecolorallocate($img, 232, 232, 238);
+imagefill($img, 0, 0, $bg);
+
+$lineColor1 = imagecolorallocate($img, 120, 120, 130);
+$lineColor2 = imagecolorallocate($img, 100, 100, 110);
+for ($i = 0; $i < 6; $i++) {
+    imageline($img, random_int(0, $w), random_int(0, $h), random_int(0, $w), random_int(0, $h), $i % 2 ? $lineColor1 : $lineColor2);
+}
+
+$textColor = imagecolorallocate($img, 40, 40, 50);
+$len = strlen($code);
+$sizes = [3, 4, 5];
+for ($i = 0; $i < $len; $i++) {
     $char = $code[$i];
-    $x = 20 + $i * 30;
-    $y = rand(30, 50);
-    $angle = rand(-15, 15);
-    $font_size = 20;
-    
-    // Случайный цвет для каждой цифры
-    $char_color = imagecolorallocate($image, rand(0, 150), rand(0, 150), rand(0, 150));
-    
-    // Используем встроенный шрифт (если нет TrueType)
-    imagestring($image, 5, $x, $y, $char, $char_color);
+    $size = $sizes[array_rand($sizes)];
+    $x = 15 + $i * 36;
+    $y = 18 + random_int(0, 18);
+    imagestring($img, $size, $x, $y, $char, $textColor);
 }
 
-// Добавляем шум (точки)
-for ($i = 0; $i < 100; $i++) {
-    $x = rand(0, $width);
-    $y = rand(0, $height);
-    $color = imagecolorallocate($image, rand(0, 255), rand(0, 255), rand(0, 255));
-    imagesetpixel($image, $x, $y, $color);
-}
-
-// Отправляем заголовок и изображение
+ob_end_clean();
 header('Content-Type: image/png');
-imagepng($image);
-imagedestroy($image);
+header('Cache-Control: no-store, no-cache');
+imagepng($img);
+imagedestroy($img);
 ?>

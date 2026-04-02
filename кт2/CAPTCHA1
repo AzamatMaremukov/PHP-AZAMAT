@@ -9,9 +9,30 @@ for ($i = 0; $i < 5; $i++) {
 }
 $_SESSION['captcha'] = $code;
 
-$img = imagecreatefromjpeg('noise.jpg');
-$width = imagesx($img);
-$height = imagesy($img);
+// Создаем новое изображение с градиентным фоном вместо загрузки из файла
+$width = 200;
+$height = 60;
+$img = imagecreatetruecolor($width, $height);
+
+// Создаем градиентный фон
+$start_color = imagecolorallocate($img, 240, 240, 255); // Светло-голубой
+$end_color = imagecolorallocate($img, 200, 220, 255);   // Голубой
+
+// Заполняем градиентом
+for ($i = 0; $i <= $height; $i++) {
+    $ratio = $i / $height;
+    $r = (240 - (240-200) * $ratio);
+    $g = (240 - (240-220) * $ratio);
+    $b = (255 - (255-255) * $ratio);
+    $color = imagecolorallocate($img, $r, $g, $b);
+    imageline($img, 0, $i, $width, $i, $color);
+}
+
+// Добавляем шум на фон
+$noise_color = imagecolorallocate($img, 180, 200, 230);
+for ($i = 0; $i < 300; $i++) {
+    imagesetpixel($img, rand(0, $width), rand(0, $height), $noise_color);
+}
 
 $font = 'c:/windows/fonts/arial.ttf';
 

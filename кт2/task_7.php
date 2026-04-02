@@ -66,7 +66,7 @@ $attempts_left = $_SESSION['captcha_attempts'] ?? 3;
             max-width: 600px;
             margin: 30px auto;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url('https://img.freepik.com/free-photo/view-mountain-with-dreamy-aesthetic_23-2151700198.jpg');
             min-height: 100vh;
         }
         
@@ -187,7 +187,7 @@ $attempts_left = $_SESSION['captcha_attempts'] ?? 3;
         
         button {
             padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #8000ff 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -260,7 +260,7 @@ $attempts_left = $_SESSION['captcha_attempts'] ?? 3;
 </head>
 <body>
     <div class="box">
-        <h1>🔐 Задание 7: Капча-картинка</h1>
+        <h1> Задание 7: Капча-картинка</h1>
         <p>Введите код с картинки для подтверждения, что вы не робот.</p>
 
         <?php if ($message !== ''): ?>
@@ -269,17 +269,13 @@ $attempts_left = $_SESSION['captcha_attempts'] ?? 3;
             </div>
         <?php endif; ?>
 
-        <?php if (!$blocked): ?>
-            <div class="hint">
-                💡 Подсказка: код состоит из 5 цифр
-            </div>
-        <?php endif; ?>
+       
 
         <div class="captcha-container">
             <img src="task_07_gen.php?t=<?= time() ?>" alt="Капча" width="200" height="70">
             
             <div>
-                <a href="task_07.php?new=1" class="refresh-link">🔄 Обновить капчу</a>
+                <a href="task_07.php?new=1" class="refresh-link"> Обновить капчу</a>
             </div>
         </div>
 

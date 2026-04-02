@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $показать_форму) {
     <h1>Задание 5: Авторизация с капчей</h1>
 
     <?php if ($показать_форму): ?>
-        <p>Войдите: логин <strong>Ashad</strong>, пароль <strong>070676</strong>. Введите также код капчи.</p>
+        <p>Войдите: логин <strong>Azamat</strong>, пароль <strong>200722</strong>. Введите также код капчи.</p>
         <?php if ($ошибка): ?>
             <p class="error"><?= htmlspecialchars($ошибка) ?></p>
         <?php endif; ?>
